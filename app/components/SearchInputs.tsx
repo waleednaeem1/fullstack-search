@@ -9,9 +9,10 @@ type Props = {
   onChange: (v: string) => void;
   onSearch: (v: string) => void;
   loading: boolean;
+  mode: 'search' | 'scrape';
 };
 
-export default function SearchInput({ query, onChange, onSearch, loading }: Props) {
+export default function SearchInput({ query, onChange, onSearch, loading ,mode }: Props) {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [isFocused, setIsFocused] = useState(false);
 

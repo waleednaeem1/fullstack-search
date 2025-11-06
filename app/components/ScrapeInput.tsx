@@ -45,6 +45,7 @@ export default function ScrapePage() {
           onChange={setQuery}
           onSearch={handleSearch}
           loading={loading}
+        mode="scrape"
         />
       </div>
 
