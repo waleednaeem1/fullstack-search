@@ -294,7 +294,7 @@ export default function Page() {
                       <Title level={2} className="!m-0 !text-white">
                         {searchResults.length} Intelligence Result{searchResults.length !== 1 ? 's' : ''}
                       </Title>
-                      <Text className="text-gray-400">Ranked by neural relevance</Text>
+                      <Text className="!text-white">Ranked by neural relevance</Text>
                     </div>
                   </div>
                   <Tag 
