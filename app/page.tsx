@@ -110,22 +110,27 @@ export default function Page() {
   const results = mode === "search" ? searchResults : scrapeResults ? [scrapeResults] : [];
   const message = mode === "search" ? searchMessage : scrapeMessage;
 
-  const handleSearch = (value: string) => {
-    setHasSearched(true);
+const handleSearch = (value: string) => {
+  setHasSearched(true);
 
-    if (!value.trim()) {
-      if (mode === "search") clearSearchResults();
-      else clearScrapeResults();
-      return;
-    }
+  if (mode === "search" && value.trim()) {
+    setRecentSearches(prev => [value, ...prev.filter(s => s !== value)].slice(0, 4));
+  }
 
-    if (mode === "search") {
-      setRecentSearches(prev => [value, ...prev.filter(s => s !== value)].slice(0, 4));
-      search(value);
-    } else {
-      scrape(value);
-    }
-  };
+  if (mode === "search") {
+    search(value);  
+  } else {
+    scrape(value);  
+  }
+
+  if (!value.trim()) {
+    if (mode === "search") clearSearchResults();
+    else clearScrapeResults();
+  }
+};
+
+
+
 
   const handleQuickSearch = (term: string) => {
     setQuery(term);
@@ -262,7 +267,6 @@ export default function Page() {
                 <Card title="Page Title" className="bg-gray-800 text-white">{scrapeResults.title || "N/A"}</Card>
                 <Card title="Meta Description" className="bg-gray-800 text-white">{scrapeResults.metaDescription || "N/A"}</Card>
                 <Card title="H1 Heading" className="bg-gray-800 text-white">{scrapeResults.h1 || "N/A"}</Card>
-                <Text className="text-gray-400 block">Status: {scrapeResults.status}</Text>
               </div>
             )}
           </div>
