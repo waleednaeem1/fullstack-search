@@ -243,7 +243,7 @@ export default function Page() {
             {mode === "search" && (
               <>
                 {summary && <SummaryCard summary={summary} sources={sources.map(String)} />}
-                <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3">
+                <div className="grid gap-6 lg:grid-cols-2 xl:grid-cols-3 mt-10">
                   {searchResults.map((r, i) => (
                     <ResultCard
                       key={r.id}
