@@ -1,78 +1,103 @@
-Mini Full-Stack Search & Scraper (Next.js + Node)
+# 🔍 Mini Full-Stack Search & Scraper (Next.js + Node.js)
 
-This repository contains two small, self-contained tasks built using Next.js (with the App Router) and Node.js API routes.
-Both tasks are implemented within a single Next.js project so that the frontend and backend run together, keeping setup minimal.
+A compact full-stack project built with **Next.js (App Router)** and **Node.js API routes**, demonstrating a clean separation of frontend and backend logic.
+This repository includes **two self-contained tasks**: a local search interface and a lightweight web scraper.
 
-Overview
-Task A – Mini Search UI
+---
 
-A small search interface that allows a user to enter a query and retrieve the most relevant results from a local JSON file through a backend API.
+## ✨ Features
 
-Task B – Micro Scraper
+* ✅ **Mini Search UI** – search a local JSON dataset with relevance scoring
+* ✅ **Micro Scraper** – scrape page title, meta description, and first `<h1>` from any webpage
+* ✅ Clean **frontend + backend integration** in a single Next.js project
+* ✅ **TypeScript** for static typing and reliability
+* ✅ **Puppeteer** for headless scraping
 
-A lightweight API endpoint that scrapes a given webpage and extracts basic information like the page title, meta description, and first <h1> element.
+---
 
-Tech Stack
+## 🛠️ Tech Stack
 
-Next.js 14 (App Router) – for both frontend and backend routes
+| Component    | Technology                    |
+| ------------ | ----------------------------- |
+| Frontend     | Next.js 14 (App Router)       |
+| Backend      | Node.js API routes            |
+| Language     | TypeScript                    |
+| Web Scraping | Puppeteer (headless Chrome)   |
+| Data Storage | Local JSON (`data/faqs.json`) |
 
-Node.js (API routes) – backend logic using the built-in Next.js server
+---
 
-TypeScript – static typing for clarity and safety
+## 📁 Project Structure
 
-Puppeteer – used in Task B for web scraping
-
-Local JSON file – used as data storage for the search feature
-
-Project Structure
-.
+```
+mini-fullstack-search/
 ├── app/
-│   ├── page.tsx               # Frontend search UI
+│   ├── page.tsx               # Frontend search page
 │   ├── api/
 │   │   ├── search/route.ts    # POST /api/search
 │   │   └── scrape/route.ts    # GET /api/scrape
-│   └── components/            # UI components
-│
+│   └── components/            # Reusable UI components
 ├── data/
-│   └── faqs.json              # Local dataset for the search API
-│
+│   └── faqs.json              # Local dataset for search
 ├── package.json
 ├── tsconfig.json
 ├── .env.example
 └── README.md
+```
 
-Getting Started
+---
 
-Clone the repository:
+## 🚀 Getting Started
 
+### 1. Clone the Repository
+
+```bash
 git clone https://github.com/<your-username>/mini-fullstack-search.git
 cd mini-fullstack-search
+```
 
+### 2. Install Dependencies
 
-Install dependencies:
-
+```bash
 npm install
+```
 
+### 3. Run Development Server
 
-Run the development server:
-
+```bash
 npm run dev
+```
 
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-Open http://localhost:3000
- in your browser.
+### 4. Build & Run in Production
 
-Task A: Mini Search UI
-API
+```bash
+npm run build
+npm start
+```
 
-POST /api/search
+Both frontend and API routes are served from the same Next.js app.
 
-Request body:
+---
+
+## 📝 Task A: Mini Search UI
+
+### API Endpoint
+
+**POST** `/api/search`
+
+**Request Body:**
+
+```json
 {
   "query": "trust badges"
 }
+```
 
-Example response:
+**Example Response:**
+
+```json
 {
   "results": [
     {
@@ -84,106 +109,111 @@ Example response:
   "sources": ["1"],
   "summary": "Trust badges near the CTA improved signups and user confidence."
 }
+```
 
-Behavior
+### Behavior
 
-Performs a simple keyword match (case-insensitive) against both the title and body.
+* Case-insensitive keyword match against `title` and `body`
+* Returns **top 3 results**, ordered by relevance
+* Includes `sources` array and combined `summary`
 
-Returns up to 3 top results, ordered by relevance.
+### Error Handling
 
-Generates a short combined summary of the matched results.
+| Case        | Status | Response                                            |
+| ----------- | ------ | --------------------------------------------------- |
+| Empty query | 400    | `{ "error": "Query cannot be empty." }`             |
+| No matches  | 200    | `{ "results": [], "message": "No matches found." }` |
 
-Includes a sources array for reference.
+---
 
-Error handling
-Case	Status	Response
-Empty query	400	{ "error": "Query cannot be empty." }
-No matches	200	{ "results": [], "message": "No matches found." }
-Task B: Micro Scraper
-API
+## 📝 Task B: Micro Scraper
 
-GET /api/scrape?url=<page-url>
+### API Endpoint
 
-Example:
+**GET** `/api/scrape?url=<page-url>`
+
+**Example:**
+
+```
 GET /api/scrape?url=https://example.com
+```
 
-Example response:
+**Example Response:**
+
+```json
 {
   "title": "Example Domain",
   "metaDescription": "This domain is for use in illustrative examples in documents.",
   "h1": "Example Domain",
   "status": 200
 }
+```
 
-Behavior
+### Behavior
 
-Uses Puppeteer in headless mode.
+* Headless scraping with Puppeteer
+* Waits until document is fully loaded (network idle)
+* 20-second timeout per request
 
-Waits until the document is fully loaded or network is idle.
+### Error Handling
 
-Includes a 20-second timeout for every request.
+| Case                | Status | Response                               |
+| ------------------- | ------ | -------------------------------------- |
+| Invalid/missing URL | 400    | `{ "error": "Invalid URL" }`           |
+| Timeout             | 504    | `{ "error": "Timeout" }`               |
+| General error       | 500    | `{ "error": "Internal server error" }` |
 
-Error handling
-Case	Status	Response
-Invalid or missing URL	400	{ "error": "Invalid URL" }
-Timeout	504	{ "error": "Timeout" }
-General error	500	{ "error": "Internal server error" }
-Bonus
+### Bonus Features
 
-Adds a single retry on failed navigation.
+* Single retry on failed navigation
+* Supports user-agent override
 
-Supports user-agent override.
+---
 
-Architecture Notes
+## 🏗️ Architecture Notes
 
-Even though this is a single Next.js project, the backend logic is separated into controller, service, and utility layers for clarity.
-For example:
+* **Controller-Service-Utility separation** for clarity and maintainability:
 
+```
 /app/api/search/
-  ├── route.ts         # Controller (handles request/response)
-  ├── searchService.ts # Service (search logic)
-  └── utils.ts         # Helpers and scoring logic
+├── route.ts         # Controller (handles request/response)
+├── searchService.ts # Core search logic
+└── utils.ts         # Helpers and scoring logic
+```
 
+* Easy to extract backend into a standalone Express service if needed
 
-This structure makes it easy to extract into a standalone Express service if needed later.
+---
 
-Frontend Behavior
+## 🖥️ Frontend Behavior
 
-The main page provides:
+* Simple search input + submit button
+* Loading and empty states handled gracefully
+* Displays top 3 matched results (title + snippet)
+* Minimal frontend: only React & built-in Next.js features
 
-A search input and button
+---
 
-Loading and empty states
+## 📌 Assumptions
 
-List of top 3 matched results (title + short snippet)
+* No external database required
+* Data stored locally (`/data/faqs.json`)
+* Puppeteer runs headless (no GUI required)
+* Synchronous, minimal logic for clarity
 
-No client-side framework beyond React and built-in Next features is used.
+---
 
-Running in Production
-
-Build and start:
-
-npm run build
-npm start
-
-
-The same app will serve both frontend and API routes.
-
-Assumptions
-
-No external database or third-party API required.
-
-Data is stored locally in /data/faqs.json.
-
-Puppeteer runs headless (no system GUI needed).
-
-All logic is synchronous and intentionally minimal for clarity.
-
-License
+## ⚖️ License
 
 MIT License © 2025
 
-Notes
+---
 
-This project was designed to demonstrate clear API design, clean separation of logic, and practical Next.js usage for full-stack tasks.
-It avoids unnecessary complexity and focuses on correctness, readability, and maintainability.
+## 📝 Notes
+
+This project demonstrates:
+
+* Clear API design
+* Separation of concerns (frontend vs backend vs services)
+* Practical Next.js usage for full-stack tasks
+* Readability, maintainability, and correctness
